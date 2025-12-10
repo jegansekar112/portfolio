@@ -45,7 +45,7 @@ export default function Contact() {
     
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
-  }, [])
+  }, [formData])
 
   const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault()
@@ -60,13 +60,6 @@ export default function Contact() {
 
     try {
       // EmailJS configuration
-      // You'll need to set up a free EmailJS account and get these values:
-      // 1. Go to https://www.emailjs.com/
-      // 2. Create a free account
-      // 3. Create an email service (Gmail, Outlook, etc.)
-      // 4. Create an email template
-      // 5. Get your Public Key, Service ID, and Template ID
-      
       const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || 'service_b9815j7'
       const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || 'template_lig1b6g'
       const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || '3WjvRsq6CXP0EBcqd'
@@ -93,7 +86,6 @@ export default function Contact() {
         setSubmitStatus('idle')
       }, 5000)
     } catch (error) {
-      console.error('Error sending email:', error)
       setSubmitStatus('error')
       
       // Reset error message after 5 seconds
@@ -103,7 +95,7 @@ export default function Contact() {
     } finally {
       setIsSubmitting(false)
     }
-  }, [validateForm])
+  }, [validateForm, formData])
 
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
