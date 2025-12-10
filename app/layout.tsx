@@ -9,6 +9,7 @@ import VisitorTracker from '@/components/VisitorTracker'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://jegan-portfolio.vercel.app'),
   title: 'Jegan Sekar - Full Stack Developer | Portfolio',
   description: 'Portfolio of Jegan Sekar, a Full Stack Developer with 2+ years of experience specializing in React.js, Next.js, Python, Flask, and cloud technologies. Open to relocate. Based in Chennai, India.',
   keywords: 'Full Stack Developer, React, Node.js, Next.js, Python, JavaScript, Dart, Flutter, AWS, Docker, Kubernetes, System Architecture, Chennai, India',
