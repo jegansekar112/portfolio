@@ -51,6 +51,8 @@ export default function TechCarousel() {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isAutoPlaying, setIsAutoPlaying] = useState(true)
   const timeoutRef = useRef<NodeJS.Timeout | null>(null)
+  const touchStartX = useRef<number | null>(null)
+  const touchEndX = useRef<number | null>(null)
 
   useEffect(() => {
     if (!isAutoPlaying) return
@@ -94,6 +96,33 @@ export default function TechCarousel() {
     resumeAutoPlay()
   }, [resumeAutoPlay])
 
+  // Swipe handlers
+  const minSwipeDistance = 50
+
+  const onTouchStart = useCallback((e: React.TouchEvent) => {
+    touchEndX.current = null
+    touchStartX.current = e.targetTouches[0].clientX
+  }, [])
+
+  const onTouchMove = useCallback((e: React.TouchEvent) => {
+    touchEndX.current = e.targetTouches[0].clientX
+  }, [])
+
+  const onTouchEnd = useCallback(() => {
+    if (!touchStartX.current || !touchEndX.current) return
+    
+    const distance = touchStartX.current - touchEndX.current
+    const isLeftSwipe = distance > minSwipeDistance
+    const isRightSwipe = distance < -minSwipeDistance
+
+    if (isLeftSwipe) {
+      goToNext()
+    }
+    if (isRightSwipe) {
+      goToPrevious()
+    }
+  }, [goToNext, goToPrevious])
+
   // Get visible items (5 items centered around currentIndex) - memoized
   const visibleItems = useMemo(() => {
     const items = []
@@ -111,7 +140,12 @@ export default function TechCarousel() {
     <div className="w-full py-8">
       <div className="relative max-w-6xl mx-auto px-4 sm:px-8">
         {/* Carousel Container with Gradient Background */}
-        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 p-8 shadow-xl">
+        <div 
+          className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 p-8 shadow-xl touch-pan-y"
+          onTouchStart={onTouchStart}
+          onTouchMove={onTouchMove}
+          onTouchEnd={onTouchEnd}
+        >
           <div className="flex justify-center gap-6 items-center">
             {visibleItems.map((tech, displayIndex) => {
               const Icon = tech.icon
